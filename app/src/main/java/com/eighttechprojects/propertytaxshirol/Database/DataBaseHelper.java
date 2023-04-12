@@ -517,10 +517,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 
-	public void updateGeoJsonPolygonForm(String polygonID, String passPolygonId) {
+	public void updateGeoJsonPolygonForm(String polygonID, String formModelStr) {
 		open();
 		ContentValues cv = new ContentValues();
-		cv.put("geojsonform", "xyz");
+		cv.put(keyParamGeoJsonForm, formModelStr);
 		try {
 			db.update(TABLE_GEO_JSON_POLYGON_FORM, cv, "polygon_id=?", new String[]{polygonID});
 			Log.e(TAG,"Success"  );

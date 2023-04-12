@@ -1501,8 +1501,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 bin.setOwner_name(tv_form_owner_name.getText().toString());
                 formModel.setForm(bin);
                 String data = Utility.convertFormModelToString(formModel);
-                updateFormtoDatabase(formModel);
-                Log.e(TAG,"Updated Data - 1 -"+ data);
+                updateFormtoDatabase(data);
+//                Log.e(TAG,"Updated Data - 1 -"+ data);
                 fDB.dismiss();
             });
         } catch (Exception e) {
@@ -1513,19 +1513,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    private void updateFormtoDatabase(FormModel formModel) {
-        dataBaseHelper.updateGeoJsonPolygonForm(polygonID, Utility.PASS_POLYGON_ID);
+    private void updateFormtoDatabase(String formModelStr) {
+        dataBaseHelper.updateGeoJsonPolygonForm(polygonID, formModelStr);
         Log.e(TAG, "Form Save to Database" );
-        updateForm();
-       ArrayList<String> list  = dataBaseHelper.getAllData(polygonID);
-       for (int i = 0; i<list.size(); i ++){
-           Log.e(TAG,list.get(i));
-       }
-
-    }
-
-    private void updateForm() {
-        dataBaseHelper.updateGeoJsonPolygonForm(polygonID, Utility.PASS_POLYGON_ID);
     }
 
     private void updateFormToServe(FormModel formModel) {
@@ -1931,6 +1921,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             GeoJsonModel geoJsonModel = (GeoJsonModel) polygon.getTag();
 
             if (!Utility.isEmptyString(geoJsonModel.getPolygonID())) {
+                this.polygonID = geoJsonModel.getPolygonID();
                 Log.e(TAG, "Polygon ID: -> " + Utility.getStringValue(geoJsonModel.getPolygonID()));
                 showSelectedDialogBox(geoJsonModel);
                 // showEditDialogBox(geoJsonModel);
