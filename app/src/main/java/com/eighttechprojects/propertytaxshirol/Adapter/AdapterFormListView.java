@@ -635,6 +635,13 @@ public class AdapterFormListView extends RecyclerView.Adapter<AdapterFormListVie
                         // Value 30.1
                         c.drawText(Utility.getStringValue(bin.getSolar_panel_type()),lineVertical1 + 10 ,sno30Height,p2);
 
+
+                        // Sno. 32
+                        int sno32Height = sno30Height + 40 + 20 + 20  ;
+                        c.drawText("गटारीची व्यवस्था आहे का?",rectLeft + 10, sno32Height,p2);
+                        //Value 37
+                        c.drawText(Utility.getStringValue(bin.getIs_drainage_available()),rectLeft + 160 ,sno32Height,p2);
+
                         // Sno. 31
                         int sno31Height = sno30Height + 40 ;
                         String sno31 = "पावसाच्या पाण्याची साठवण प्रकल्प" + "\n" + "(रेन हार्वेस्टिंग)";
@@ -643,8 +650,15 @@ public class AdapterFormListView extends RecyclerView.Adapter<AdapterFormListVie
                             sno31Height += p2.descent() - p2.ascent();
                         }
 
+                        // Draw Horizontal Line
+                        int lineHeight31 = sno31Height ;
+                        c.drawLine(rectLeft,lineHeight31,rectRight,lineHeight31,p2);
+
                         // Value 31
                         c.drawText(Utility.getStringValue(bin.getRain_water_harvesting()),rectLeft + 160 ,sno31Height - 20,p2);
+
+                        //Value 37
+                        c.drawText(Utility.getStringValue(bin.getIs_drainage_available()),rectLeft + 160 ,sno31Height - 20,p2);
 
 
                         // Close Page 1
@@ -841,14 +855,6 @@ public class AdapterFormListView extends RecyclerView.Adapter<AdapterFormListVie
                                     c2.drawText(no,snoT2Start, heightRow2,p4);
                                     heightRow2 += p4.descent() - p4.ascent();
                                 }
-//                                 <item>आर.सी.सी. पद्धतीची इमारत</item>
-//                                <item>लोडबेरिंग</item>
-//                                <item>दगड विटांचे चनुा किंवा सिमेंट वापरून उभारलेली इमारत</item>
-//                                <item>दगड विटांचे मातीची इमारत</item>
-//                                <item>झोपडी किंवा मातीची इमारत</item>
-//                                <item>खुली जागा</item>
-//                                <item>मनोरा तळ</item>
-//
                                 // 3
                                 if(buildingType.equalsIgnoreCase("आर.सी.सी. पद्धतीची इमारत")){
                                     int heightRow3 = rectTopHeight1 - 40;
@@ -1006,8 +1012,8 @@ public class AdapterFormListView extends RecyclerView.Adapter<AdapterFormListVie
 
 
 
-                        // टिप :- [ इमारत प्रकार  : - अ  - आर . सी . सी . विटांचे   इमारत , ब - लोडबेरिंग , क - दगड  विनयचे चुना किंवा सिमेंट वापरून उभारलेली इमारत , ड - दगड विटांचे मातीची इमारत , इ - झोपडी किंवा मातीची इमारत , ई - खुली जागा , उ  - मनोरा तळ ]
-                        String a = "टिप :- [ इमारत प्रकार  : - अ- आर.सी.सी. विटांचे इमारत, ब - लोडबेरिंग, क - दगड विनयचे चुना किंवा सिमेंट वापरून \n उभारलेली इमारत, ड - दगड विटांचे मातीची इमारत, इ - झोपडी किंवा मातीची इमारत, ई - खुली जागा, उ - मनोरा तळ ]";
+                        // टिप :- [ इमारत प्रकार  : - अ  - आर . सी . सी . विटांचे   इमारत , ब - लोडबेरिंग , क - दगड  विनयचे चुना किंवा सिमेंट वापरून उभारलेली इमारत , ड - दगड विटांचे मातीची इमारत , इ - झोपडी किंवा मातीची इमारत , ई - खुली जागा , उ  - मनोरा तळ , ऊ - पत्र्याची इमारत]
+                        String a = "टिप :- [ इमारत प्रकार  : - अ- आर.सी.सी. विटांचे इमारत, ब - लोडबेरिंग, क - दगड विनयचे चुना किंवा सिमेंट वापरून \n उभारलेली इमारत, ड - दगड विटांचे मातीची इमारत, इ - झोपडी किंवा मातीची इमारत, ई - खुली जागा, उ - मनोरा तळ , \n ऊ - पत्र्याची इमारत]";
 
                         p4.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
                         int h1 = rectTopHeight + 130;

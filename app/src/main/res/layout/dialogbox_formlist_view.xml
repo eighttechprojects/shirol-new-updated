@@ -97,6 +97,19 @@
             android:textSize="16sp"
             android:textStyle="bold"
             style="?android:attr/buttonBarButtonStyle" />
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="0dp"
+            android:visibility="gone"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_margin="5dp"
+            style="?android:attr/buttonBarButtonStyle" />
 
 
 

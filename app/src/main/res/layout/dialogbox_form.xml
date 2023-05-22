@@ -1440,6 +1440,49 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/black" />
             </LinearLayout>
+            <!-- 32 spinner -->
+            <LinearLayout
+                android:id="@+id/ll_37"
+                android:padding="@dimen/formPadding"
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <!-- label -->
+                <LinearLayout
+                    android:background="@color/formColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:visibility="gone"
+                        android:layout_marginEnd="5dp"
+                        android:layout_gravity="top"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:src="@drawable/ic_star"
+                        android:contentDescription="@string/todo" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="30. गटारीची व्यवस्था आहे का?"
+                        android:textSize="@dimen/formLabelSize"
+                        android:textColor="@color/formTextColor" />
+                </LinearLayout>
+                <!-- value  spinner -->
+                <TextView
+                    android:id="@+id/db_form_sp_drainage_system_available"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/bg_edittext"
+                    android:padding="10dp"
+                    android:textSize="@dimen/formValueSize"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
 
 <!-- ################ Header - 3 ########################################################################################################################################################################### -->
             <!-- 3- header -->
@@ -1524,7 +1567,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="30. प्लॉटचे एकूण क्षेत्रफळ (चौ.फु.)"
+                        android:text="31. प्लॉटचे एकूण क्षेत्रफळ (चौ.फु.)"
                         android:textSize="@dimen/formLabelSize"
                         android:textColor="@color/formTextColor" />
                 </LinearLayout>
@@ -1588,7 +1631,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="31. तळ मजल्याचे बांधकाम क्षेत्रफळ (चौ.फु.)"
+                        android:text="32. तळ मजल्याचे बांधकाम क्षेत्रफळ (चौ.फु.)"
                         android:textSize="@dimen/formLabelSize"
                         android:textColor="@color/formTextColor" />
                 </LinearLayout>
@@ -1652,7 +1695,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="32. तळ मजला उर्वरित मोकळी जागा (चौ.फु.)"
+                        android:text="33. तळ मजला उर्वरित मोकळी जागा (चौ.फु.)"
                         android:textSize="@dimen/formLabelSize"
                         android:textColor="@color/formTextColor" />
                 </LinearLayout>
@@ -1698,7 +1741,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="33. मिळकतीचे फोटो"
+                        android:text="34. मिळकतीचे फोटो"
                         android:textSize="@dimen/formLabelSize"
                         android:textColor="@color/formTextColor" />
                 </LinearLayout>
@@ -1720,6 +1763,20 @@
                         android:src="@drawable/ic_camera"
                         android:tag="todo" />
                 </LinearLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/db_llImageCapturedView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+                    </LinearLayout>
+                </HorizontalScrollView>
 
 
             </LinearLayout>
@@ -1748,7 +1805,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="34. Sketch Plan"
+                        android:text="35. Sketch Plan"
                         android:textSize="@dimen/formLabelSize"
                         android:textColor="@color/formTextColor" />
                 </LinearLayout>

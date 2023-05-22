@@ -1,11 +1,13 @@
 package com.eighttechprojects.propertytaxshirol.Activity.GoogleMap;
 
+import static android.os.Build.ID;
 import static com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +57,7 @@ import com.eighttechprojects.propertytaxshirol.Model.FormDBModel;
 import com.eighttechprojects.propertytaxshirol.Model.FormFields;
 import com.eighttechprojects.propertytaxshirol.Model.FormListModel;
 import com.eighttechprojects.propertytaxshirol.Model.FormModel;
+import com.eighttechprojects.propertytaxshirol.Model.FormTableModel;
 import com.eighttechprojects.propertytaxshirol.Model.GeoJsonModel;
 import com.eighttechprojects.propertytaxshirol.Model.LastKeyModel;
 import com.eighttechprojects.propertytaxshirol.R;
@@ -103,6 +106,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,10 +151,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private ArrayList<LastKeyModel> lastKeysList = new ArrayList<>();
 
+    private ArrayList<FileUploadViewModel> fileUploadList = new ArrayList<>();
+
+
     private LastKeyModel lastKeyModel;
     private FormDBModel formDBModel;
 
-    private String latitude  = "";
+    private String latitude = "";
     private String longitude = "";
 
     // File Upload
@@ -176,10 +183,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     FormFields bin;
 
     private String polygonID = "";
-    StringBuilder sbFilePathLocal = new StringBuilder();
-    StringBuilder sbCameraImagePathLocal = new StringBuilder();
-
-
 
 
 //------------------------------------------------------- onCreate ---------------------------------------------------------------------------------------------------------------------------
@@ -194,6 +197,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mActivity = this;
         // init Database
         initDatabase();
+
 
         // base Application
         baseApplication = (BaseApplication) getApplication();
@@ -225,7 +229,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationPermission();
 
     }
-
 
 
 //------------------------------------------------------- InitDatabase --------------------------------------------------------------------------------------------------------------------------
@@ -354,8 +357,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         alertDialog.setMessage("Are you sure want to Logout?");
         alertDialog.setPositiveButton("Logout", (dialog, which) -> {
             dialog.dismiss();
-            showProgressBar();
-            LogoutSync();
+            reDirectToLoginPage();
+//            showProgressBar();
+//            LogoutSync();
+            Log.e(TAG, "Form 1->" + formModel);
         });
         alertDialog.setNegativeButton("Cancel", null);
         alertDialog.setCancelable(false);
@@ -518,10 +523,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (SystemPermission.isInternetConnected(mActivity)) {
                 showProgressBar("Sync...");
                 Log.e(TAG, "Sync Database Contain some Data");
+                Log.e(TAG, "" + formDBModels.size());
                 if (formDBModels.size() > 0) {
                     Log.e(TAG, "Sync Service Form On");
-                    formSyncList = dataBaseHelper.getAllForms();
+                    formSyncList = formDBModels;
                     Log.e(TAG, "Sync Form Size: " + formSyncList.size());
+                    Log.e(TAG, "Sync Form Data: " + formDBModels.get(0).getFormData());
                     SyncFormDetails();
                 } else {
                     isFormUpload = true;
@@ -535,8 +542,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     isLastKeyUpload = true;
                 }
             }
-
         }
+
+
     }
 
     private void SyncLastKeyDetails() {
@@ -571,7 +579,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             isCameraUpload = true;
             formDBModel = formSyncList.get(0);
             formSyncList.remove(0);
-            SyncFormDataToServer(formDBModel);
+
+            if (formDBModel.getFormData() != null && !formDBModel.getFormData().isEmpty()){
+                SyncFormDataToServer(formDBModel);
+            }
+            else {
+                SyncFormDetails();
+            }
         } else {
             isFormUpload = true;
             isFileUpload = true;
@@ -590,8 +604,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.e(TAG, "Upload to Server.........!");
         Map<String, String> params = new HashMap<>();
         params.put("data", formDBModel.getFormData());
+        Log.e(TAG, "data->" + formDBModel.getFormData());
         BaseApplication.getInstance().makeHttpPostRequest(this, URL_Utility.ResponseCode.WS_FORM_SYNC, URL_Utility.WS_FORM_SYNC, params, false, false);
+
     }
+
 
     private boolean isFormDataNotSync() {
         ArrayList<FormDBModel> formDBModels = dataBaseHelper.getAllForms();
@@ -612,7 +629,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     // Status -> Success
                     if (status.equalsIgnoreCase(URL_Utility.STATUS_SUCCESS)) {
 
-                        if (formDBModel != null) {
                             boolean isFile = false;
                             boolean isCamera = false;
 
@@ -653,7 +669,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     LogoutSyncFormDetails();
                                 }
                             }
-                        }
                     }
                     // Status -> Fail
                     else {
@@ -688,11 +703,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             FormModel formModel = Utility.convertStringToFormModel(formDBModel.getFormData());
                             String unique_number = formModel.getForm().getUnique_number();
 
-                            if (!Utility.isEmptyString(formDBModel.getFilePath())) {
+                            Log.e(TAG, "get File Path" + formDBModel.getFilePath());
+                            if (!Utility.isEmptyString(formDBModel.getFilePath()) &&
+                                    (formDBModel.getFilePath().contains("/storage") || formDBModel.getFilePath().contains("local"))) {
                                 Log.e(TAG, "Form Contains File Path");
                                 isFile = true;
                             }
-                            if (!Utility.isEmptyString(formDBModel.getCameraPath())) {
+                            if (!Utility.isEmptyString(formDBModel.getCameraPath()) && (formDBModel.getCameraPath().contains("/storage") || formDBModel.getCameraPath().contains("local"))) {
                                 Log.e(TAG, "Form Contains Camera Path");
                                 isCamera = true;
                             }
@@ -702,6 +719,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 if (isFile) {
                                     new FileUploadServer(new StringBuilder(formDBModel.getFilePath()), "", unique_number, TYPE_FILE, false).execute();
                                 } else {
+                                    Log.e(TAG," isFileUploaded -> true");
                                     isFileUpload = true;
                                 }
 
@@ -884,7 +902,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // Exit Button functionality
             Button btExit = fDB.findViewById(R.id.btExit);
-            btExit.setOnClickListener(view -> fDB.dismiss());
+            btExit.setOnClickListener(view -> {
+                Log.e(TAG, "details ->" + Utility.convertFormModelToString(formModel));
+                fDB.dismiss();
+
+            });
             // init Linear Layout ------------------------------
             LinearLayout ll_7 = fDB.findViewById(R.id.ll_7);
             LinearLayout ll_17_1 = fDB.findViewById(R.id.ll_17_1);
@@ -896,6 +918,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             LinearLayout ll_27_2 = fDB.findViewById(R.id.ll_27_2);
             LinearLayout ll_28 = fDB.findViewById(R.id.ll_28);
             LinearLayout ll_30 = fDB.findViewById(R.id.ll_30);
+            LinearLayout ll_37 = fDB.findViewById(R.id.ll_37);
 
             // init Text View ----------------------------------------
 
@@ -931,6 +954,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             TextView tv_form_sp_solar_panel_available = fDB.findViewById(R.id.db_form_sp_solar_panel_available);
             TextView tv_form_sp_solar_panel_type = fDB.findViewById(R.id.db_form_sp_solar_panel_type);
             TextView tv_form_sp_rain_water_harvesting = fDB.findViewById(R.id.db_form_sp_rain_water_harvesting);
+            TextView tv_form_sp_drainage_system_available = fDB.findViewById(R.id.db_form_sp_drainage_system_available);
             TextView tv_form_plot_area = fDB.findViewById(R.id.db_form_plot_area);
             TextView tv_form_property_area = fDB.findViewById(R.id.db_form_property_area);
             TextView tv_form_total_area = fDB.findViewById(R.id.db_form_total_area);
@@ -1060,6 +1084,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             // 31
             tv_form_sp_rain_water_harvesting.setText(Utility.getStringValue(bin.getRain_water_harvesting()));
+//37
+            tv_form_sp_drainage_system_available.setText(Utility.getStringValue(bin.getIs_drainage_available()));
 
 
             // RecycleView -----------------------------
@@ -1081,56 +1107,52 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
             // Camera Image Upload View -----------------------
+            Log.e(TAG,"Camera Path "+ formDBModel.getCameraPath());
+            LinearLayout llImageCapturedView = fDB.findViewById(R.id.db_llImageCapturedView);
+            llImageCapturedView.setVisibility(View.VISIBLE);
+            imgCaptured.setVisibility(View.GONE);
             if (!Utility.isEmptyString(formDBModel.getCameraPath())) {
-                // try{
-                String imagePath = formDBModel.getCameraPath().split("#")[1];
-                if (formDBModel.getCameraPath().split("#")[0].startsWith("local")) {
-                    Glide.with(mActivity).load(imagePath).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imgCaptured);
-                } else {
-                    Uri uri = Uri.parse(imagePath);
-                    Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imgCaptured);
+                String[] propertyImages = formDBModel.getCameraPath().split(",");
+                Log.e(TAG, "Path" + Arrays.toString(formDBModel.getCameraPath().split(",")));
+
+                for (int i = 0; i < propertyImages.length; i++) {
+                    Log.e(TAG, "propertyImages" + propertyImages[i]);
+                    if (propertyImages[i].split("#").length > 1) {
+                        String imagePath = propertyImages[i].split("#")[1];
+                        ImageView imageView = new ImageView(mActivity);
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(200, 300);
+                        imageView.setLayoutParams(layoutParams);
+                        if (propertyImages[i].split("#")[0].startsWith("local")) {
+                            Glide.with(mActivity).load(imagePath).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
+                        } else {
+                            Uri uri = Uri.parse(imagePath);
+                            Log.e(TAG, "imagePath" + imagePath);
+                            Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
+                        }
+                        llImageCapturedView.addView(imageView);
+
+                        imageView.setOnClickListener(view -> {
+                            Dialog dialog = new Dialog(mActivity);
+                            dialog.setContentView(R.layout.image_zoom_view_layout);
+                            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            ImageView imageViewDialog = dialog.findViewById(R.id.dialogbox_image);
+
+                            if (formDBModel.getCameraPath().split("#")[0].startsWith("local")) {
+                                Glide.with(mActivity).load(formDBModel.getCameraPath().split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
+                            } else {
+                                Uri uri = Uri.parse(imagePath);
+                                Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
+                            }
+                            dialog.show();
+
+                        });
+                    }
                 }
-//                }
-//                catch (Exception e){
-//                    Log.e(TAG, e.getMessage());
-//                    imgCaptured.setImageResource(R.drawable.ic_no_image);
-//                }
-            } else {
-                // When No Image Found
-                imgCaptured.setImageResource(R.drawable.ic_no_image);
             }
 
 
-            // Click on Camera Image
-            imgCaptured.setOnClickListener(view -> {
-                Dialog dialog = new Dialog(mActivity);
-                dialog.setContentView(R.layout.image_zoom_view_layout);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                ImageView imageView = dialog.findViewById(R.id.dialogbox_image);
-
-                //  PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(imageView);
-                // Image Load!
-                //  try{
-                // String imagePath = formDBModel.getCameraPath().split("#")[1];
-                if (formDBModel.getCameraPath().split("#")[0].startsWith("local")) {
-                    Glide.with(mActivity).load(formDBModel.getCameraPath().split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
-                } else {
-                    Uri uri = Uri.parse(formDBModel.getCameraPath().split("#")[1]);
-                    Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
-                }
-                //    photoViewAttacher.update();
-
-//                        }
-//                        catch (Exception e){
-//                            Log.e(TAG, e.getMessage());
-//                            imageView.setImageResource(R.drawable.ic_no_image);
-//                        }
-                dialog.show();
-            });
-
 
             // File Upload View -------------------------
-            ArrayList<FileUploadViewModel> fileUploadList = new ArrayList<>();
             if (!Utility.isEmptyString(formDBModel.getFilePath())) {
                 db_tv_fileUploadName.setText("File Found");
                 int n = formDBModel.getFilePath().split(",").length;
@@ -1141,22 +1163,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String fileName = file.getName();
                         fileUploadList.add(new FileUploadViewModel(fileName, filePath, false));
                     } else {
-                        String filename = formDBModel.getFilePath().split(",")[i].split("#")[0];
-                        String filepath = formDBModel.getFilePath().split(",")[i].split("#")[1];
-                        fileUploadList.add(new FileUploadViewModel(filename, filepath, true));
+
+                        if (formDBModel.getFilePath().split(",")[i].length() > 1) {
+                            String filename = formDBModel.getFilePath().split(",")[i].split("#")[0];
+                            String filepath = formDBModel.getFilePath().split(",")[i].split("#")[1];
+                            fileUploadList.add(new FileUploadViewModel(filename, filepath, true));
+                        }
+
                     }
                 }
             } else {
                 db_tv_fileUploadName.setText("No File Upload");
             }
-
-            // File Upload Button Click
+            //to view the image file stored in File Upload
             db_btFileUpload.setOnClickListener(view -> {
                 if (Utility.isEmptyString(formDBModel.getFilePath())) {
                     Toast.makeText(mActivity, "No File Found", Toast.LENGTH_SHORT).show();
                 } else {
                     ViewFileUploadDialogBox(fileUploadList);
                 }
+
             });
 
             // Show Dialog Box
@@ -1181,11 +1207,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Button btExit = vfBox.findViewById(R.id.btExit);
         btExit.setOnClickListener(view -> vfBox.dismiss());
 
+
         // RecycleView
         RecyclerView rvFormListView = vfBox.findViewById(R.id.rvFormListView);
 
         AdapterFormListView adapterFormListView = new AdapterFormListView(mActivity, formList, formListModel -> {
-            //vfBox.dismiss();
             if (!Utility.isEmptyString(polygonID)) {
                 viewFormDialogBox(formListModel.getId());
             }
@@ -1204,16 +1230,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             FormModel formModel = Utility.convertStringToFormModel(formDBModel.getFormData());
             // Form Fields
             FormFields bin = formModel.getForm();
-            // if(formDBModel.isOnlineSave()){
+
             Log.e(TAG, "Image - > " + formModel.getForm().getProperty_images());
             Log.e(TAG, "File -> " + formModel.getForm().getPlan_attachment());
+
+
 
 
             // Dialog Box
             Dialog fDB = new Dialog(this);
             fDB.requestWindowFeature(Window.FEATURE_NO_TITLE);
             fDB.setCancelable(false);
-            fDB.setContentView(R.layout.activity_edit_form);
+            fDB.setContentView(R.layout.dialogbox_form);
             fDB.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             // Camera
             ImageView imgCaptured = fDB.findViewById(R.id.db_imgCaptured);
@@ -1221,6 +1249,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Button db_btFileUpload = fDB.findViewById(R.id.db_btFileUpload);
             // TextView  File Name
             TextView db_tv_fileUploadName = fDB.findViewById(R.id.db_tv_fileUploadName);
+
+
 
 
             // Exit Button inside the form
@@ -1307,7 +1337,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             if (bin.getProperty_user_type().equalsIgnoreCase("भोगवटादार")) {
                 isSno6Selected = false;
-                ll_7.setVisibility(View.VISIBLE);
+                ll_7.setVisibility(View.GONE);
                 // 7
                 tv_form_property_user.setText(Utility.getStringValue(bin.getProperty_user()));
             } else if (bin.getProperty_user_type().equalsIgnoreCase("भाडेकरू")) {
@@ -1315,7 +1345,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 tv_form_property_user.setText("");
                 isSno6Selected = true;
             } else {
-                isSno6Selected = false;
+                isSno6Selected = true;
                 ll_7.setVisibility(View.GONE);
                 tv_form_property_user.setText("");
             }
@@ -1428,6 +1458,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             tv_form_total_area.setText(Utility.getStringValue(bin.getTotal_area()));
 
 
+
+
             // Camera Image Upload View -----------------------
             if (!Utility.isEmptyString(formDBModel.getCameraPath())) {
                 // try{
@@ -1494,15 +1526,51 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Show Dialog Box
             fDB.show();
 
+
             //Update Button inside the form
             Button btUpdate = fDB.findViewById(R.id.btnSubmit);
             btUpdate.setOnClickListener(view -> {
                 Toast.makeText(mActivity, "Form Updated", Toast.LENGTH_SHORT).show();
                 bin.setOwner_name(tv_form_owner_name.getText().toString());
+                bin.setOld_property_no(tv_form_old_property_no.getText().toString());
+                bin.setNew_property_no(tv_form_new_property_no.getText().toString());
+                bin.setProperty_name(tv_form_property_name.getText().toString());
+                bin.setProperty_address(tv_form_property_address.getText().toString());
+                bin.setProperty_user_type(tv_form_sp_property_user_type.getText().toString());
+                bin.setProperty_user(tv_form_property_user.getText().toString());
+                bin.setResurvey_no(tv_form_resurvey_no.getText().toString());
+                bin.setGat_no(tv_form_gat_no.getText().toString());
+                bin.setZone(tv_form_zone.getText().toString());
+                bin.setWard(tv_form_ward.getText().toString());
+                bin.setMobile(tv_form_mobile.getText().toString());
+                bin.setEmail(tv_form_email.getText().toString());
+                bin.setAadhar_no(tv_form_aadhar_no.getText().toString());
+                bin.setGis_id(tv_form_gis_id.getText().toString());
+                bin.setProperty_type(tv_form_sp_property_type.getText().toString());
+                bin.setNo_of_floor(tv_form_no_of_floors.getText().toString());
+                bin.setProperty_release_date(tv_form_property_release_date.getText().toString());
+                bin.setBuild_permission(tv_form_sp_build_permission.getText().toString());
+                bin.setBuild_completion_form(tv_form_sp_build_completion_form.getText().toString());
+                bin.setMetal_road(tv_form_sp_metal_road.getText().toString());
+                bin.setIs_toilet_available(tv_form_sp_is_toilet_available.getText().toString());
+                bin.setTotal_toilet(tv_form_total_toilet.getText().toString());
+                bin.setToilet_type(tv_form_sp_toilet_type.getText().toString());
+                bin.setIs_streetlight_available(tv_form_sp_is_streetlight_available.getText().toString());
+                bin.setIs_water_line_available(tv_form_sp_is_water_line_available.getText().toString());
+                bin.setTotal_water_line1(tv_form_sp_total_water_line_27_1.getText().toString());
+                bin.setTotal_water_line2(tv_form_sp_total_water_line_27_2.getText().toString());
+                bin.setWater_use_type(tv_form_sp_water_use_type.getText().toString());
+                bin.setSolar_panel_available(tv_form_sp_solar_panel_available.getText().toString());
+                bin.setSolar_panel_type(tv_form_sp_solar_panel_type.getText().toString());
+                bin.setRain_water_harvesting(tv_form_sp_rain_water_harvesting.getText().toString());
+                bin.setPlot_area(tv_form_plot_area.getText().toString());
+                bin.setProperty_area(tv_form_property_area.getText().toString());
+                bin.setTotal_area(tv_form_total_area.getText().toString());
+
                 formModel.setForm(bin);
-                String data = Utility.convertFormModelToString(formModel);
-                updateFormtoDatabase(data);
-//                Log.e(TAG,"Updated Data - 1 -"+ data);
+
+//                String data = Utility.convertFormModelToString(formModel);
+//                updateFormtoDatabase(data);
                 fDB.dismiss();
             });
         } catch (Exception e) {
@@ -1513,18 +1581,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    private void updateFormtoDatabase(String formModelStr) {
-        dataBaseHelper.updateGeoJsonPolygonForm(polygonID, formModelStr);
-        Log.e(TAG, "Form Save to Database" );
-    }
-
-    private void updateFormToServe(FormModel formModel) {
-           showProgressBar(" Form Updating....");
-        Map<String, String> params = new HashMap<>();
-        params.put("data", Utility.convertFormModelToString(formModel));
-        Log.e(TAG, "Form -> " + Utility.convertFormModelToString(formModel));
-        BaseApplication.getInstance().makeHttpPostRequest(this, URL_Utility.ResponseCode.WS_UPDATE_FORM, URL_Utility.WS_UPDATE_FORM, params, false, false);
-    }
+//    private void updateFormtoDatabase(String formModelStr) {
+//        dataBaseHelper.updateGeoJsonPolygonForm(polygonID, formModelStr);
+//        Log.e(TAG, "Form Save to Database" );
+//    }
+//
+//    private void updateFormToServe(FormModel formModel) {
+//           showProgressBar(" Form Updating....");
+//        Map<String, String> params = new HashMap<>();
+//        params.put("data", Utility.convertFormModelToString(formModel));
+//        Log.e(TAG, "Form -> " + Utility.convertFormModelToString(formModel));
+//        BaseApplication.getInstance().makeHttpPostRequest(this, URL_Utility.ResponseCode.WS_UPDATE_FORM, URL_Utility.WS_UPDATE_FORM, params, false, false);
+//    }
 
 
 
@@ -1547,13 +1615,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // RecycleView
         RecyclerView rvFormListView = vfBox.findViewById(R.id.rvFormListView);
 
+
         AdapterFormListView adapterFormListView = new AdapterFormListView(mActivity, formList, formListModel -> {
             //vfBox.dismiss();
-            if (!Utility.isEmptyString(polygonID)) {
-                editFormDialogBox(formListModel.getId());
+            if (!Utility.isEmptyString(polygonID) ) {
+                Intent intent = new Intent(this, FormActivity.class);
+                intent.putExtra(Utility.PASS_FORM_NO, formListModel.getId());
+                intent.putExtra(Utility.PASS_IS_EDIT_MODE, true);
+                intent.putExtra(Utility.PASS_POLYGON_ID,polygonID);
+                startActivity(intent);
             }
         });
-
         Utility.setToVerticalRecycleView(mActivity, rvFormListView, adapterFormListView);
 
     }
@@ -1800,6 +1872,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     }
                 }
             }
+
         }
     }
 
@@ -2007,43 +2080,50 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (filePathData != null) {
                     if (!Utility.isEmptyString(filePathData.toString())) {
                         // File Path!
+                        //File Upload Sync for Multiple files
                         String[] path = filePathData.toString().split(",");
                         Log.e(TAG, "path: " + filePathData.toString());
                         for (String filepath : path) {
-                            File sourceFile = new File(filepath.split("#")[1]);
-                            String data = "";
-                            JSONObject params = new JSONObject();
-                            try {
-                                if (isCameraFileUpload) {
-                                    params.put(Utility.PASS_COLUMN_NUMBER, URL_Utility.PARAM_PROPERTY_IMAGES);
-                                } else {
-                                    params.put(Utility.PASS_COLUMN_NUMBER, URL_Utility.PARAM_PLAN_ATTACHMENT);
-                                }
-                                params.put(Utility.PASS_UNIQUE_NUMBER, unique_number);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            // Encrypt Data!
-                            data = params.toString();
-                            AndroidMultiPartEntity entity = new AndroidMultiPartEntity(num -> publishProgress((int) ((num / (float) totalSize) * 100)));
-                            entity.addPart(URL_Utility.PARAM_FILE_UPLOAD, new FileBody(sourceFile));
-                            entity.addPart("data", new StringBody(data));
-                            Log.e(TAG, "File-Upload Data -> " + data);
+                            if (filepath != null && !filepath.isEmpty()){
+                              String filePathTemp =  filepath.split("#")[1];
+                              if (filePathTemp.startsWith("/storage")){
+                                  String data = "";
+                                  JSONObject params = new JSONObject();
+                                  try {
+                                      if (isCameraFileUpload) {
+                                          params.put(Utility.PASS_COLUMN_NUMBER, URL_Utility.PARAM_PROPERTY_IMAGES);
+                                      } else {
+                                          params.put(Utility.PASS_COLUMN_NUMBER, URL_Utility.PARAM_PLAN_ATTACHMENT);
+                                      }
+                                      params.put(Utility.PASS_UNIQUE_NUMBER, unique_number);
+                                  } catch (JSONException e) {
+                                      e.printStackTrace();
+                                  }
+                                  // Encrypt Data!
+                                  data = params.toString();
+                                  AndroidMultiPartEntity entity = new AndroidMultiPartEntity(num -> publishProgress((int) ((num / (float) totalSize) * 100)));
+                                  entity.addPart(URL_Utility.PARAM_FILE_UPLOAD, new FileBody(new File(filePathTemp)));
+                                  entity.addPart("data", new StringBody(data));
+                                  Log.e(TAG, "File-Upload Data -> " + data);
 
-                            totalSize = entity.getContentLength();
-                            httppost.setEntity(entity);
-                            HttpResponse response = httpclient.execute(httppost);
-                            HttpEntity r_entity = response.getEntity();
-                            int statusCode = response.getStatusLine().getStatusCode();
+                                  totalSize = entity.getContentLength();
+                                  httppost.setEntity(entity);
+                                  HttpResponse response = httpclient.execute(httppost);
+                                  HttpEntity r_entity = response.getEntity();
+                                  int statusCode = response.getStatusLine().getStatusCode();
 
-                            if (statusCode == 200) {
-                                responseString = EntityUtils.toString(r_entity);
-                            } else {
-                                dismissProgressBar();
-                                responseString = "Error occurred! Http Status Code: " + statusCode;
-                                Log.e(TAG, responseString);
-                                // Utility.showToast(mActivity, Utility.ERROR_MESSAGE);
+                                  if (statusCode == 200) {
+                                      responseString = EntityUtils.toString(r_entity);
+                                  } else {
+                                      dismissProgressBar();
+                                      responseString = "Error occurred! Http Status Code: " + statusCode;
+                                      Log.e(TAG, responseString);
+                                      // Utility.showToast(mActivity, Utility.ERROR_MESSAGE);
+                                  }
+                              }
                             }
+//                            File sourceFile = new File(path[0].split("#")[1]);
+
                         }
                     } else {
                         Log.e(TAG, "filePathData is Empty");
@@ -2189,7 +2269,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             // Encrypt Data!
                             data = params.toString();
                             AndroidMultiPartEntity entity = new AndroidMultiPartEntity(num -> publishProgress((int) ((num / (float) totalSize) * 100)));
-                            entity.addPart(URL_Utility.PARAM_FILE_UPLOAD, new FileBody(sourceFile));
+                            entity.addPart(URL_Utility.WS_FORM_FILE_UPLOAD, new FileBody(sourceFile));
                             entity.addPart("data", new StringBody(data));
                             Log.e(TAG, "File-Upload Data -> " + data);
 

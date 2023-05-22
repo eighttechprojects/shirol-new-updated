@@ -77,7 +77,7 @@
         <item>इतर</item>
     </string-array>
 
-    <!-- 19,20,22,25,26,29,31 -->
+    <!-- 19,20,22,25,26,29,31, 32 -->
     <string-array name="sp_yes_no">
         <item>होय</item>
         <item>नाही</item>
@@ -127,6 +127,7 @@
         <item>झोपडी किंवा मातीची इमारत</item>
         <item>खुली जागा</item>
         <item>मनोरा तळ</item>
+        <item>पत्र्याची इमारत</item>
     </string-array>
 
     <string-array name="sp_building_use_type">

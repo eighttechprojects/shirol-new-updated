@@ -74,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="View"
+                    android:visibility="gone"
                     android:textColor="@color/white"
                     android:background="@drawable/bg_button" />
                 <Button
@@ -83,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="Edit"
                     android:textColor="@color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:background="@drawable/bg_button" />
 
 

@@ -1,9 +1,7 @@
 package com.eighttechprojects.propertytaxshirol.Model;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FormModel {
 
@@ -33,8 +31,8 @@ public class FormModel {
         this.form = form;
     }
 
-    public void setDetais(ArrayList<FormTableModel> detais) {
-        this.detais = detais;
+    public void setDetais(List<FormTableModel> detais) {
+        this.detais = (ArrayList<FormTableModel>) detais;
     }
 
 

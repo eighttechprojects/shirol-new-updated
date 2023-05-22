@@ -1565,6 +1565,54 @@
                                 tools:listitem="@android:layout/simple_selectable_list_item" />
                         </LinearLayout>
                     </LinearLayout>
+<!--                32 spinner-->
+                <LinearLayout
+                    android:id="@+id/ll_37"
+                    android:padding="@dimen/formPadding"
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <!-- label -->
+                    <LinearLayout
+                        android:background="@color/formColor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="10dp">
+                        <ImageView
+                            android:visibility="gone"
+                            android:layout_marginEnd="5dp"
+                            android:layout_gravity="top"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:src="@drawable/ic_star"
+                            android:contentDescription="@string/todo" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="30. गटारीची व्यवस्था आहे का?"
+                            android:textSize="@dimen/formLabelSize"
+                            android:textColor="@color/formTextColor" />
+                    </LinearLayout>
+                    <!-- value  spinner -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/formSpinnerSize"
+                        android:layout_marginTop="5dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_edittext">
+                        <Spinner
+                            android:id="@+id/form_sp_drainage_system_available"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                            app:theme="@style/ThemeOverlay.AppCompat.Light"
+                            tools:listitem="@android:layout/simple_selectable_list_item"
+                            tools:ignore="DuplicateIds" />
+                    </LinearLayout>
+                </LinearLayout>
+
 
 <!-- ################ Header - 3 ########################################################################################################################################################################### -->
                 <!-- 3- header -->
@@ -1648,7 +1696,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="30. प्लॉटचे एकूण क्षेत्रफळ (चौ.फु.)"
+                            android:text="31. प्लॉटचे एकूण क्षेत्रफळ (चौ.फु.)"
                             android:textSize="@dimen/formLabelSize"
                             android:textColor="@color/formTextColor" />
                     </LinearLayout>
@@ -1712,7 +1760,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="31. तळ मजल्याचे बांधकाम क्षेत्रफळ (चौ.फु.)"
+                            android:text="32. तळ मजल्याचे बांधकाम क्षेत्रफळ (चौ.फु.)"
                             android:textSize="@dimen/formLabelSize"
                             android:textColor="@color/formTextColor" />
                     </LinearLayout>
@@ -1776,7 +1824,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="32. तळ मजला उर्वरित मोकळी जागा (चौ.फु.)"
+                            android:text="33. तळ मजला उर्वरित मोकळी जागा (चौ.फु.)"
                             android:textSize="@dimen/formLabelSize"
                             android:textColor="@color/formTextColor" />
                     </LinearLayout>
@@ -1822,11 +1870,13 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="33. मिळकतीचे फोटो"
+                            android:text="34. मिळकतीचे फोटो"
                             android:textSize="@dimen/formLabelSize"
                             android:textColor="@color/formTextColor" />
                     </LinearLayout>
                     <!-- value -->
+
+
                     <LinearLayout
                         android:id="@+id/llImageCapture"
                         android:layout_width="wrap_content"
@@ -1834,7 +1884,7 @@
                         android:layout_gravity="center"
                         android:gravity="center"
                         android:layout_marginTop="5dp"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <ImageView
                             android:id="@+id/imgCaptured"
@@ -1843,7 +1893,23 @@
                             android:scaleType="fitCenter"
                             android:src="@drawable/ic_camera"
                             android:tag="todo" />
+
+
                     </LinearLayout>
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/llImageCapturedView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal">
+                </LinearLayout>
+                    </HorizontalScrollView>
 
 
                 </LinearLayout>
@@ -1872,7 +1938,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="34. Sketch Plan"
+                            android:text="35. Sketch Plan"
                             android:textSize="@dimen/formLabelSize"
                             android:textColor="@color/formTextColor" />
                     </LinearLayout>
@@ -1915,6 +1981,16 @@
                             android:layout_height="40dp"
                             android:textColor="@color/white"
                             android:gravity="center" />
+                        <Button
+                            android:id="@+id/db_btFileUpload"
+                            android:text="View"
+                            android:visibility="gone"
+                            android:layout_marginStart="5dp"
+                            android:background="@drawable/bg_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:textColor="@color/white"
+                            android:gravity="center" />
                     </LinearLayout>
 
 
@@ -1947,6 +2023,19 @@
                     android:textSize="16sp"
                     android:layout_margin="5dp"
                     style="?android:attr/buttonBarButtonStyle" />
+            <Button
+                android:id="@+id/btnSubmit"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_button"
+                android:text="Update"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/btExit"

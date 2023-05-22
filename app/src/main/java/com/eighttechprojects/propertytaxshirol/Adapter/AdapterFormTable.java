@@ -34,6 +34,10 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
     String db_form_sp_building_type = "";
     String db_form_sp_building_use_type = "";
 
+
+
+
+
 //------------------------------------------------------- Constructor -------------------------------------------------------------------------------------------------------------------------------------------------
 
     public AdapterFormTable(Activity mActivity, ArrayList<FormTableModel> formTableModels) {
@@ -70,9 +74,10 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
             holder.btRemoveItem.setVisibility(View.GONE);
             holder.btEditItem.setVisibility(View.GONE);
         }
-        else{
+        else {
             holder.btRemoveItem.setVisibility(View.VISIBLE);
             holder.btEditItem.setVisibility(View.VISIBLE);
+
             // Button Remove Item
             holder.btRemoveItem.setOnClickListener(view -> {
                 int pos = position;
@@ -90,9 +95,14 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
                 });
             });
 
+
         }
 
+
     }
+
+
+
 
 //------------------------------------------------------- init -------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -156,6 +166,7 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
         TextView tag_no;
         Button btRemoveItem;
         Button btEditItem;
+
 
         LinearLayout ll_table7;
 
@@ -254,6 +265,10 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
                     case "मनोरा तळ":
                         building_type.setSelection(6);
                         break;
+
+                    case "पत्र्याची इमारत":
+                        building_type.setSelection(7);
+                        break;
                 }
             }
         }
@@ -321,7 +336,6 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}});
-
 
         // Update Button
         Button updateItem = fDB.findViewById(R.id.dbAdd);

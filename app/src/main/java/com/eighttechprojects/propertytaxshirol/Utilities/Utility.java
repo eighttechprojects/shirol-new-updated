@@ -1,5 +1,7 @@
 package com.eighttechprojects.propertytaxshirol.Utilities;
 
+import static com.eighttechprojects.propertytaxshirol.Activity.GoogleMap.MapsActivity.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,7 +35,6 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.eighttechprojects.propertytaxshirol.BuildConfig;
 import com.eighttechprojects.propertytaxshirol.Model.FormFields;
 import com.eighttechprojects.propertytaxshirol.Model.FormModel;
 import com.eighttechprojects.propertytaxshirol.Model.FormTableModel;
@@ -48,6 +49,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mikelau.croperino.BuildConfig;
 
 
 import java.io.File;
@@ -111,7 +113,13 @@ public class Utility {
     public static final String PASS_LAT        = "latitude";
     public static final String PASS_LONG       = "longitude";
     public static final String PASS_FORM_ID    = "form_id";
+
     public static final String PASS_POLYGON_ID = "polygon_id";
+    public static final String PASS_FORM_NO = "form_no";
+    public static final String PASS_IS_EDIT_MODE = "edit_mode";
+
+
+
     public static final String PASS_FID        = "f_id";
     public static final String PASS_GIS_ID     = "gis_id";
 
@@ -242,6 +250,8 @@ public class Utility {
         // When Multiple Form Found
         else{
             if(isFormStatusCompleted){
+                btnEditForm.setVisibility(View.VISIBLE);
+                btViewForm.setVisibility(View.VISIBLE);
                 btMultipleForm.setVisibility(View.GONE);
                 btSingleAddForm.setVisibility(View.GONE);
             }
@@ -677,7 +687,7 @@ public class Utility {
     private static void takePhoto(Activity context, ImageFileUtils imageFileUtils, onPhotoUpload onPhotoUpload) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File destFileTemp = imageFileUtils.getDestinationFile(imageFileUtils.getRootDirFile(context));
-        Uri photoURI = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destFileTemp);
+        Uri photoURI = FileProvider.getUriForFile(context, com.eighttechprojects.propertytaxshirol.BuildConfig.APPLICATION_ID + ".provider", destFileTemp);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         onPhotoUpload.getPhotoPath(destFileTemp.getAbsolutePath());
         context.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);

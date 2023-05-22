@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 
 import com.eighttechprojects.propertytaxshirol.Activity.GoogleMap.MapsActivity;
 import com.eighttechprojects.propertytaxshirol.R;
@@ -32,15 +31,6 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             try
             {
-//                if(isPackageInstalled("com.eighttechprojects.propertytaxshirol", this.getPackageManager())){
-//                    Log.e(TAG, "Install..");
-//                    deleteCache(this);
-//                }
-//                else{
-//                    Log.e(TAG,"Not Install");
-//                }
-
-//              reDirectMap();
                 if(Utility.getBooleanSavedData(this, Utility.IS_USER_SUCCESSFULLY_LOGGED_IN)) {
                     reDirectMap();
                 }

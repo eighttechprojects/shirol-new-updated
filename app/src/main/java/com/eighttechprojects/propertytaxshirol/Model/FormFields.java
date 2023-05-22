@@ -59,6 +59,8 @@ public class FormFields {
     private String solar_panel_type;
     private String rain_water_harvesting;
 
+    private String is_drainage_available;
+
     private String form_status;
 
     private String form_comment;
@@ -66,7 +68,10 @@ public class FormFields {
     private String property_area;
     private String total_area;
 
-    private ArrayList<FormTableModel> detais;
+    public ArrayList<FormTableModel> detais;
+
+    public FormFields() {
+    }
 
 
 //------------------------------------------------------- Getter ---------------------------------------------------------------------------------------------------------------------------
@@ -246,6 +251,9 @@ public class FormFields {
 
     public String getRain_water_harvesting() {
         return rain_water_harvesting;
+    }
+    public String getIs_drainage_available() {
+        return is_drainage_available;
     }
 
     public String getUser_id() {
@@ -465,6 +473,9 @@ public class FormFields {
 
     public void setRain_water_harvesting(String rain_water_harvesting) {
         this.rain_water_harvesting = rain_water_harvesting;
+    }
+    public void setIs_drainage_available(String is_drainage_available) {
+        this.is_drainage_available = is_drainage_available;
     }
 
     public void setPlot_area(String plot_area) {

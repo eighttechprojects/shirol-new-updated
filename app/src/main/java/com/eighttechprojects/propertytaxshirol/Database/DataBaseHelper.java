@@ -401,7 +401,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		Cursor cv = executeCursor("Select * From "+TABLE_GEO_JSON_POLYGON_FORM+" Where id='" +id+"'");
 		Log.e(TAG,"Size File-> "+cv.getCount());
 		if(cv.getCount() > 0) {
-			cv.moveToFirst();
+			cv.moveToNext();
 			bin.setId(cv.getString(cv.getColumnIndex(keyParamID)));
 			bin.setPolygon_id(cv.getString(cv.getColumnIndex(keyParamPolygonID)));
 			bin.setFormData(cv.getString(cv.getColumnIndex(keyParamGeoJsonForm)));
@@ -419,7 +419,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	public ArrayList<FormDBModel> getAllForms() {
 		ArrayList<FormDBModel> list = new ArrayList<>();
 		open();
-		Cursor cv = executeCursor(GET_GEO_JSON_POLYGON_FORM_LOCAL);
+		Cursor cv = executeCursor(GET_GEO_JSON_POLYGON_FORM);
+		Log.e(TAG, "cv-Count" + cv.getCount());
 		if(cv.getCount() > 0) {
 			cv.moveToFirst();
 			for(int i=0; i<cv.getCount(); i++) {
@@ -517,19 +518,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 
 
-	public void updateGeoJsonPolygonForm(String polygonID, String formModelStr) {
+	public void updateGeoJsonPolygonForm(String formNo, String formModelStr, String isOnlineSave,String file, String camera) {
 		open();
 		ContentValues cv = new ContentValues();
 		cv.put(keyParamGeoJsonForm, formModelStr);
+		cv.put(keyParamIsOnlineSave,isOnlineSave);
+		cv.put(keyParamFile,file);
+		cv.put(keyParamCamera,camera);
 		try {
-			db.update(TABLE_GEO_JSON_POLYGON_FORM, cv, "polygon_id=?", new String[]{polygonID});
+			Log.e(TAG,"" + "Select * From "+TABLE_GEO_JSON_POLYGON_FORM+" Where id ='"+formNo+"'");
+			Cursor checkcursor = executeCursor("Select * From "+TABLE_GEO_JSON_POLYGON_FORM+" Where id ='"+formNo+"'");
+			Log.e(TAG, ""+ checkcursor.getCount());
+			if(checkcursor.getCount() == 0) {
+				checkcursor.moveToFirst();
+				db.insert(TABLE_GEO_JSON_POLYGON_FORM, null, cv);
+			}else {
+			db.update(TABLE_GEO_JSON_POLYGON_FORM, cv, "id=?", new String[]{formNo});
 			Log.e(TAG,"Success"  );
+			Log.e(TAG, "FORM UPDATED ->" + formModelStr);
+			}
+			Log.e(TAG, "FORM UPDATED 2 ->" + formModelStr);
 
 		}catch (SQLException e){
 			Log.e(TAG,"Error");
 		}
 		close();
+		getAllForms();
 	}
+
 
 	@SuppressLint("Range")
 	public ArrayList<String> getAllData(String polygonID){

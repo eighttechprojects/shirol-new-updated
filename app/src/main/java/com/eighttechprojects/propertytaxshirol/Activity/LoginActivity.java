@@ -143,6 +143,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
             case R.id.btnLogin:
                 if(SystemPermission.isInternetConnected(mActivity)){
                     processToLogin();
+
                 }
                 else{
                     Utility.showOKDialogBox(this, "Alert", "Need Internet Connection to Login.", DialogInterface::dismiss);
@@ -197,6 +198,8 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
             e.printStackTrace();
         }
         params.put("data",data);
+        Log.e(TAG, "Form ->" + data);
+
         URL_Utility.ResponseCode responseCode = URL_Utility.ResponseCode.WS_LOGIN;
         BaseApplication.getInstance().makeHttpPostRequest(mActivity, responseCode, URL_Utility.WS_LOGIN, params, false, false);
     }
@@ -244,18 +247,11 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                         // User Detail
                         JSONObject user_details = mLoginObj.getJSONObject("user_detail");
                         String userid        = user_details.optString("user_id");
-                        //String firstName     = user_details.optString("first_name");
-                        //String lastName      = user_details.optString("last_name");
                         String email         = user_details.optString("email");
                         String password       = user_details.optString("password");
-                        //String mobile_number = user_details.optString("mobile_number");
-                        //String profile_image = user_details.optString("profile_image");
                         Utility.saveData(LoginActivity.this, Utility.LOGGED_USERID,  userid);
-//                        Utility.saveData(LoginActivity.this, Utility.PROFILE_FIRSTNAME, firstName);
-//                        Utility.saveData(LoginActivity.this, Utility.PROFILE_LASTNAME, lastName);
                         Utility.saveData(LoginActivity.this, Utility.PROFILE_EMAIL_ID, email);
                         Utility.saveData(LoginActivity.this, Utility.PROFILE_PASSWORD, password);
-//                        Utility.saveData(LoginActivity.this, Utility.PROFILE_MOBILE_NUMBER, mobile_number);
                         Utility.saveData(LoginActivity.this, Utility.IS_USER_SUCCESSFULLY_LOGGED_IN, true);
 
                         // Form Data
@@ -273,17 +269,15 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                                 dataBaseHelper.insertGenerateID(polygonID,counter);
 
                                 JSONArray geoJsonForm   = formDataArray.getJSONObject(i).getJSONArray("forms");
+                                Log.e(TAG, "form Size " + geoJsonForm.length());
                                 if(geoJsonForm.length() > 0){
+                                    Log.e(TAG, "form Size if ->");
                                     for(int j=0; j<geoJsonForm.length(); j++){
-                                       // Log.e(TAG,"Form: -> " + geoJsonForm.getString(j));
                                         FormModel formModel = Utility.convertStringToFormModel(geoJsonForm.getString(j));
                                         dataBaseHelper.insertGeoJsonPolygonForm(polygonID,geoJsonForm.getString(j),"t",formModel.getForm().getPlan_attachment(),formModel.getForm().getProperty_images());
                                     }
                                 }
-                                else{
-                                     // Log.e(TAG,"Polygon ID-> "+polygonID +" Form Empty");
-                                    dataBaseHelper.insertGeoJsonPolygonForm(polygonID,"","t","","");
-                                }
+//
                             }
                         }
                         else{

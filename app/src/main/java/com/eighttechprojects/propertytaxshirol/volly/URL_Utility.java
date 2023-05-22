@@ -9,7 +9,7 @@ public class URL_Utility {
 	public static final String STATUS_FAIL      = "fail";
 	public static final String SAVE_SUCCESSFULLY = "Save Successfully";
 	// App Version
-	public static  String APP_VERSION = "1.1";
+	public static  String APP_VERSION = "1.0";
 	// old API
 	//public static final String COMMON_API = "https://surveybaba.com/propertyform-shirol/api/";
 
@@ -57,7 +57,7 @@ public class URL_Utility {
 
 	public static final String WS_FORM_FILE_UPLOAD = COMMON_API + "upload-file";
 
-	public static final String WS_FORM_SYNC       = COMMON_API + "save-form";
+	public static final String WS_FORM_SYNC       = COMMON_API + "syncall";
 	// Resurvey
 	public static final String WS_RESURVEY_FORM   = COMMON_API + "login";
 
