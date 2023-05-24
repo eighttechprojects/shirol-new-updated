@@ -29,7 +29,10 @@
         android:required="true" />
     <uses-feature
         android:name="android.hardware.camera.flash"
-        android:required="true" /> <!--  -->
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" /> <!--  -->
     <!--  -->
     <queries>
 
@@ -51,6 +54,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PropertyTaxShirol"
         tools:replace="android:icon,android:theme"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
         <!--  -->

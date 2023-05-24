@@ -1141,6 +1141,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                 Glide.with(mActivity).load(formDBModel.getCameraPath().split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             } else {
                                 Uri uri = Uri.parse(imagePath);
+                                Log.e(TAG, "imagePath-1" + imagePath);
                                 Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             }
                             dialog.show();
@@ -1725,6 +1726,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             switch (item) {
 
                 case Utility.ITEM_SELECTED.SingleForm:
+                    Log.e(TAG, "PolygonID->");
                     isMultipleForm = false;
                     dialogBox.dismiss();
                     reDirectToSingleFormFunction(geoJsonModel, isMultipleForm);
@@ -1733,13 +1735,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 case Utility.ITEM_SELECTED.MultipleForm:
                     dialogBox.dismiss();
                     isMultipleForm = true;
-                    // empty form then we have to create it!
-//                    if(!isMultipleForm){
-//                        reDirectToSingleFormFunction(geoJsonModel,isMultipleForm);
-//                    }
-//                    else{
                     viewMultipleFormDialogBox(geoJsonModel.getGisID(), geoJsonModel.getPolygonID(), geoJsonModel.getWardNo(), dialogBox);
-//                    }
                     break;
 
                 case Utility.ITEM_SELECTED.VIEW:

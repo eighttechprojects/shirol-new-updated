@@ -2,6 +2,27 @@ package com.eighttechprojects.propertytaxshirol.volly;
 
 public class URL_Utility {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// Response
 	public static final String STATUS           = "status";
 	public static final String STATUS_SUCCESS   = "Success";
@@ -9,7 +30,7 @@ public class URL_Utility {
 	public static final String STATUS_FAIL      = "fail";
 	public static final String SAVE_SUCCESSFULLY = "Save Successfully";
 	// App Version
-	public static  String APP_VERSION = "1.0";
+	public static  String APP_VERSION = "1.2";
 	// old API
 	//public static final String COMMON_API = "https://surveybaba.com/propertyform-shirol/api/";
 

@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,7 +36,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.android.volley.VolleyError;
 import com.bumptech.glide.Glide;
 import com.eighttechprojects.propertytaxshirol.Adapter.AdapterFormTable;
@@ -270,7 +268,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
 
     ArrayList<FileUploadViewModel> fileUploadList = new ArrayList<>();
 
-    FormDBModel formDBModel;
+    FormDBModel formDBModel = new FormDBModel();
     boolean isSno6Selected = false;
 
 
@@ -430,16 +428,15 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                             ImageView imageViewDialog = dialog.findViewById(R.id.dialogbox_image);
                             Log.e(TAG, "SelImagePath" + selImage);
 
-                            if (selImage.split("#")[1].startsWith("local")) {
+                            if (selImage.split("#")[0].startsWith("local")) {
                                 Log.e(TAG, "imagePathLocal" + imagePath);
-
                                 Glide.with(mActivity).load(selImage.split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             } else {
-                                Uri uri = Uri.parse(selImage.split("#")[1]);
+                                Uri uri = Uri.parse(imagePath);
+
                                 Log.e(TAG, "imagePathUri" + imagePath);
                                 Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             }
-
                             dialog.show();
 
                         });
@@ -1681,7 +1678,6 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                                 okDialogBox.dismiss();
                                 if(formModel != null){
                                     dataBaseHelper.insertGeoJsonPolygonForm(polygonID,Utility.convertFormModelToString(formModel),"t",sbFilePathLocal.toString(),sbCameraImagePathLocal.toString());
-                                    Log.e(TAG, "Insert");
                                 }
                                 submitForm();
                             });
@@ -1852,6 +1848,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                         ImageView imageView = new ImageView(mActivity);
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(200, 300);
                         imageView.setLayoutParams(layoutParams);
+
                         Glide.with(mActivity).load(destFile.getAbsolutePath()).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
                         binding.llImageCapturedView.addView(imageView);
 // set Image
@@ -2094,7 +2091,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                             // Encrypt Data!
                             data = params.toString();
                             AndroidMultiPartEntity entity = new AndroidMultiPartEntity(num -> publishProgress((int) ((num / (float) totalSize) * 100)));
-                            entity.addPart(URL_Utility.WS_FORM_FILE_UPLOAD, new FileBody(sourceFile));
+                            entity.addPart(URL_Utility.PARAM_FILE_UPLOAD, new FileBody(sourceFile));
                             entity.addPart("data", new StringBody(data));
                             Log.e(TAG, "File-Upload Data -> "+ data);
 

@@ -1,7 +1,5 @@
 package com.eighttechprojects.propertytaxshirol.Utilities;
 
-import static com.eighttechprojects.propertytaxshirol.Activity.GoogleMap.MapsActivity.TAG;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
