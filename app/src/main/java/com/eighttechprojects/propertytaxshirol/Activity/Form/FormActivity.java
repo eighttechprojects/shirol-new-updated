@@ -412,6 +412,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                         ImageView imageView = new ImageView(mActivity);
                         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(200, 300);
                         imageView.setLayoutParams(layoutParams);
+
                         if (propertyImages[i].split("#")[0].startsWith("local")) {
                             Glide.with(mActivity).load(imagePath).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageView);
                         } else {
@@ -433,7 +434,6 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                                 Glide.with(mActivity).load(selImage.split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             } else {
                                 Uri uri = Uri.parse(imagePath);
-
                                 Log.e(TAG, "imagePathUri" + imagePath);
                                 Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             }
@@ -449,6 +449,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
 
             TextView tv_fileUploadName = findViewById(R.id.tv_fileUploadName);
             if (!Utility.isEmptyString(formDBModel.getFilePath())) {
+                sbFilePathLocal.append(formDBModel.getFilePath());
                 tv_fileUploadName.setText("File Found");
                 int n = formDBModel.getFilePath().split(",").length;
                 for (int i = 0; i < n; i++) {

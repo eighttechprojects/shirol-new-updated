@@ -879,12 +879,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             FormModel formModel = Utility.convertStringToFormModel(formDBModel.getFormData());
             // Form Fields
             FormFields bin = formModel.getForm();
-            // if(formDBModel.isOnlineSave()){
             Log.e(TAG, "Image - > " + formModel.getForm().getProperty_images());
             Log.e(TAG, "File -> " + formModel.getForm().getPlan_attachment());
-            //     formDBModel.setCameraPath(formModel.getForm().getProperty_images());
-            //     formDBModel.setFilePath(formModel.getForm().getPlan_attachment());
-            // }
+
 
             // Dialog Box
             Dialog fDB = new Dialog(this);
@@ -1114,7 +1111,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (!Utility.isEmptyString(formDBModel.getCameraPath())) {
                 String[] propertyImages = formDBModel.getCameraPath().split(",");
                 Log.e(TAG, "Path" + Arrays.toString(formDBModel.getCameraPath().split(",")));
-
                 for (int i = 0; i < propertyImages.length; i++) {
                     Log.e(TAG, "propertyImages" + propertyImages[i]);
                     if (propertyImages[i].split("#").length > 1) {
@@ -1495,7 +1491,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             });
 
             // File Upload View -------------------------
-            ArrayList<FileUploadViewModel> fileUploadList = new ArrayList<>();
             if (!Utility.isEmptyString(formDBModel.getFilePath())) {
                 db_tv_fileUploadName.setText("File Found");
                 int n = formDBModel.getFilePath().split(",").length;
@@ -2265,7 +2260,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             // Encrypt Data!
                             data = params.toString();
                             AndroidMultiPartEntity entity = new AndroidMultiPartEntity(num -> publishProgress((int) ((num / (float) totalSize) * 100)));
-                            entity.addPart(URL_Utility.WS_FORM_FILE_UPLOAD, new FileBody(sourceFile));
+                            entity.addPart(URL_Utility.PARAM_FILE_UPLOAD, new FileBody(sourceFile));
                             entity.addPart("data", new StringBody(data));
                             Log.e(TAG, "File-Upload Data -> " + data);
 
