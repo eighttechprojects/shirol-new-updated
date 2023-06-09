@@ -1160,7 +1160,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         String fileName = file.getName();
                         fileUploadList.add(new FileUploadViewModel(fileName, filePath, false));
                     } else {
-
                         if (formDBModel.getFilePath().split(",")[i].length() > 1) {
                             String filename = formDBModel.getFilePath().split(",")[i].split("#")[0];
                             String filepath = formDBModel.getFilePath().split(",")[i].split("#")[1];
