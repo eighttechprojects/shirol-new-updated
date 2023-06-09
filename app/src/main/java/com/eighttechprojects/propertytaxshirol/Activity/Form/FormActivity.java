@@ -376,6 +376,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
             binding.formPropertyAddress.setText(bin.getProperty_address());
             binding.formPropertyUser.setText(bin.getProperty_user());
             binding.formResurveyNo.setText(bin.getResurvey_no());
+            binding.formWard.setText(bin.getWard());
             binding.formGatNo.setText(bin.getGat_no());
             binding.formZone.setText(bin.getZone());
             binding.formMobile.setText(bin.getMobile());
@@ -404,6 +405,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
             if (!Utility.isEmptyString(formDBModel.getCameraPath())) {
                 sbCameraImagePathLocal.append(formDBModel.getCameraPath());
                 String[] propertyImages = formDBModel.getCameraPath().split(",");
+
                 Log.e(TAG, "Path" + Arrays.toString(formDBModel.getCameraPath().split(",")));
                 for (int i = 0; i < propertyImages.length; i++) {
                     Log.e(TAG, "propertyImages" + propertyImages[i]);
@@ -430,11 +432,11 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                             Log.e(TAG, "SelImagePath" + selImage);
 
                             if (selImage.split("#")[0].startsWith("local")) {
-                                Log.e(TAG, "imagePathLocal" + imagePath);
+                                Log.e(TAG, "imagePathLocal" + selImage.split("#")[0]);
                                 Glide.with(mActivity).load(selImage.split("#")[1]).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             } else {
-                                Uri uri = Uri.parse(imagePath);
-                                Log.e(TAG, "imagePathUri" + imagePath);
+                                Uri uri = Uri.parse(selImage.split("#")[1]);
+                                Log.e(TAG, "imagePathUri" + selImage.split("#")[1]);
                                 Glide.with(mActivity).load(uri).placeholder(R.drawable.loading_bar).error(R.drawable.ic_no_image).into(imageViewDialog);
                             }
                             dialog.show();
@@ -1575,6 +1577,8 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
 
     private void SaveFormToDatabase(FormModel formModel) {
         dataBaseHelper.insertGeoJsonPolygonForm(polygonID, Utility.convertFormModelToString(formModel), "f", sbFilePathLocal.toString(), sbCameraImagePathLocal.toString());
+        dataBaseHelper.insertGeoJsonPolygonFormLocal(polygonID,Utility.convertFormModelToString(formModel),"f",sbFilePathLocal.toString(),sbCameraImagePathLocal.toString());
+
         Log.e(TAG, "Form Save To Local Database");
         dismissProgressBar();
         String generateID = dataBaseHelper.getGenerateID(polygonID);

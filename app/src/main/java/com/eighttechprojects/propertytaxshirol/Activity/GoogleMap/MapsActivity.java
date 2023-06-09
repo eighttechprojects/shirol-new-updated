@@ -172,7 +172,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private HashMap<String, Polygon> geoJsonPolygonLists = new HashMap<>();
     boolean isMultipleForm = false;
     boolean isMarkerVisible = false;
-    private static final String droneLayer = "http://173.249.24.149:8080/geoserver/shirol/wms?service=WMS&version=1.1.0&request=GetMap&layers=shirol%3AShirol_Base&bbox=74.58111479319136%2C16.72872028532293%2C74.62853852632936%2C16.76589925517693&width=768&height=602&srs=EPSG%3A4326&styles=&format=application/openlayers";
+    private static final String droneLayer = "http://173.249.24.149:8080/geoserve0r/shirol/wms?service=WMS&version=1.1.0&request=GetMap&layers=shirol%3AShirol_Base&bbox=74.58111479319136%2C16.72872028532293%2C74.62853852632936%2C16.76589925517693&width=768&height=602&srs=EPSG%3A4326&styles=&format=application/openlayers";
 
     private String currentLatitude = "";
     private String currentLongitude = "";
@@ -1565,8 +1565,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 formModel.setForm(bin);
 
-//                String data = Utility.convertFormModelToString(formModel);
-//                updateFormtoDatabase(data);
                 fDB.dismiss();
             });
         } catch (Exception e) {

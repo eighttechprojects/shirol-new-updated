@@ -253,7 +253,6 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                         Utility.saveData(LoginActivity.this, Utility.PROFILE_EMAIL_ID, email);
                         Utility.saveData(LoginActivity.this, Utility.PROFILE_PASSWORD, password);
                         Utility.saveData(LoginActivity.this, Utility.IS_USER_SUCCESSFULLY_LOGGED_IN, true);
-
                         // Form Data
                         JSONArray formDataArray = new JSONArray(mLoginObj.getString("form_data"));
                         if(formDataArray.length() > 0) {
@@ -277,7 +276,10 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                                         dataBaseHelper.insertGeoJsonPolygonForm(polygonID,geoJsonForm.getString(j),"t",formModel.getForm().getPlan_attachment(),formModel.getForm().getProperty_images());
                                     }
                                 }
-//
+                                else{
+                                    // Log.e(TAG,"Polygon ID-> "+polygonID +" Form Empty");
+                                    dataBaseHelper.insertGeoJsonPolygonForm(polygonID,"","t","","");
+                                }
                             }
                         }
                         else{
