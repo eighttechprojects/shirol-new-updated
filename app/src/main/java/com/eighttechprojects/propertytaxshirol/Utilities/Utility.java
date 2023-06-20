@@ -667,7 +667,7 @@ public class Utility {
     private static void takePhoto(Activity context, ImageFileUtils imageFileUtils, int position, onPhotoCaptured onPhotoCaptured) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File destFileTemp = imageFileUtils.getDestinationFile(imageFileUtils.getRootDirFile(context));
-        Uri photoURI = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", destFileTemp);
+        Uri photoURI = FileProvider.getUriForFile(context, com.eighttechprojects.propertytaxshirol.BuildConfig.APPLICATION_ID  + ".provider", destFileTemp);
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         onPhotoCaptured.getPath(destFileTemp.getAbsolutePath(), position);
         context.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);

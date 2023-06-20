@@ -1818,8 +1818,8 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                 }
 
                 try{
-                    sbCameraImagePath = new StringBuilder();
-                    sbCameraImageName = new StringBuilder();
+//                    sbCameraImagePath = new StringBuilder();
+//                    sbCameraImageName = new StringBuilder();
                     binding.txtGeoTag.setText(getGeoTagData());
 
                     Bitmap bitmapPreview = ImageFileUtils.handleSamplingAndRotationBitmap(mActivity, Uri.fromFile(cameraDestFileTemp));
@@ -1837,7 +1837,15 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                             destFile = destFileTemp2;
                             Log.e("Picture", "screenshot capture failed");
                         }
-                        sbCameraImagePath.append(destFile.getPath());
+                        //to set multiple images having sbCameraImagePath
+                        if (sbCameraImagePath.length() > 0){
+                            sbCameraImagePath.append(",");
+                            sbCameraImagePath.append(destFile.getPath());
+                        } else {
+                            sbCameraImagePath.append(destFile.getPath());
+                        }
+                        Log.e(TAG, "" + destFile.getPath());
+                        Log.e(TAG, "Camera Image path: " + sbCameraImagePath);
                         //to set multiple images
                         if (sbCameraImagePathLocal.length() > 0){
                             sbCameraImagePathLocal.append(",");
@@ -1878,7 +1886,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
                 File destFileTemp = imageFileUtils.getDestinationFile(imageFileUtils.getRootDirFile(mActivity));
                 imageFileUtils.copyFile(sourceFile, destFileTemp);
 
-                sbCameraImagePath = new StringBuilder();
+//                sbCameraImagePath = new StringBuilder();
 //                sbCameraImagePathLocal = new StringBuilder();
                 sbCameraImageName = new StringBuilder();
 
