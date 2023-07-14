@@ -2082,11 +2082,13 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
 
             try {
                 if(filePathData != null ){
+
                     if(!Utility.isEmptyString(filePathData.toString())){
                         // File Path!
                         String[] path = filePathData.toString().split(",");
                         Log.e(TAG, "path: "+ filePathData.toString());
                         for (String filepath : path) {
+
                             File sourceFile = new File(filepath);
                             String data = "";
                             JSONObject params = new JSONObject();
@@ -2110,6 +2112,7 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
 
                             totalSize = entity.getContentLength();
                             httppost.setEntity(entity);
+
                             HttpResponse response = httpclient.execute(httppost);
                             HttpEntity r_entity = response.getEntity();
                             int statusCode = response.getStatusLine().getStatusCode();

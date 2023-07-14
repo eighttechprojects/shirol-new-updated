@@ -355,6 +355,7 @@ public class AdapterFormTable extends RecyclerView.Adapter<AdapterFormTable.View
             );
             formTableModels.set(pos,f);
             notifyDataSetChanged();
+
             db_form_sp_building_type = "";
             db_form_sp_building_use_type = "";
             fDB.dismiss();

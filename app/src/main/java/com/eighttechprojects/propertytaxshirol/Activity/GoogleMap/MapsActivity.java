@@ -218,6 +218,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 for (Location loc : locationResult.getLocations()) {
                     mCurrentLocation = loc;
                     if (mCurrentLocation != null) {
+                        Log.e(TAG, "Location 1: " + currentLatitude);
+                        Log.e(TAG, "Location 2: " + currentLongitude);
                         currentLatitude = String.valueOf(mCurrentLocation.getLatitude());
                         currentLongitude = String.valueOf(mCurrentLocation.getLongitude());
                     }
