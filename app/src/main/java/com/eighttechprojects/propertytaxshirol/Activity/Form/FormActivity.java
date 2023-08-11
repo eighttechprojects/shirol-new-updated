@@ -361,7 +361,6 @@ public class FormActivity extends AppCompatActivity implements View.OnClickListe
             });
 
             form_no = intent.getStringExtra(Utility.PASS_FORM_NO);
-
             Log.e(TAG, "Form_No " + form_no);
             formDBModel = dataBaseHelper.getFormByPolygonIDAndID(form_no);
             formModel = new FormModel();

@@ -35,7 +35,7 @@ public class URL_Utility {
 	//public static final String COMMON_API = "https://surveybaba.com/propertyform-shirol/api/";
 
 	// new API
-	public static final String COMMON_API = "http://173.249.24.149/shirol-dev/api/";
+	public static final String COMMON_API = "http://173.249.24.149/shirol/api/";
 	//http://173.249.24.149/shirol/api
 
 // ########################################## COMMON PARAM ###########################################################################################################################
